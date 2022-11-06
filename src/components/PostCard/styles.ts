@@ -5,6 +5,7 @@ export const PostCardContainer = styled.div`
   padding: 2rem;
   border-radius: 10px;
   background: ${props => props.theme["base-post"]};
+    
 
   header {
     display: flex;
@@ -23,6 +24,11 @@ export const PostCardContainer = styled.div`
   p {
     color: ${props => props.theme["base-text"]};
     margin-top: 1.25rem;
+    width: 22rem;
+    height: 7rem;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   span {
