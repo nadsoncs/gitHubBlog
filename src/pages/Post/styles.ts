@@ -6,8 +6,7 @@ export const PostContainer = styled.div`
   margin: 0 auto;
 
   main {
-    width: 100%;
-
+    width: 100%; 
     padding: 2.5rem 2rem;
 
     a {
@@ -24,6 +23,12 @@ export const PostContainer = styled.div`
 
     code {
       display: block;
+
+      padding: 1rem;
+      background: ${props => props.theme["base-post"]};
+      border-radius: 2px;
+      margin-top: 1.5rem;
+      margin-bottom: 1.5rem;
     }
   }
 `

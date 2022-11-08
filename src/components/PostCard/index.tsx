@@ -13,7 +13,7 @@ export function PostCard({
   updatedAt,
 }: PostCardProps) {
   return (
-    <PostCardContainer>
+    <PostCardContainer href={'post/'+String(id)} >
       <header>
         <h1>{title}</h1>
         <span>{updatedAt}</span>

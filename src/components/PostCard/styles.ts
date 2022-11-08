@@ -1,12 +1,11 @@
 import styled from "styled-components";
 
-export const PostCardContainer = styled.div`
+export const PostCardContainer = styled.a`
   width: 100%;
   padding: 2rem;
   border-radius: 10px;
   background: ${props => props.theme["base-post"]};
-    
-
+  text-decoration: none;
   header {
     display: flex;
     flex-direction: row;

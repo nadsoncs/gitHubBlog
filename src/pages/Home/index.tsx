@@ -1,4 +1,10 @@
 import { useCallback, useEffect, useState } from 'react'
+import { formatDistanceToNow } from 'date-fns'
+import ptBr from 'date-fns/locale/pt-BR'
+import { useForm } from 'react-hook-form'
+import * as z from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+
 import { PostCard } from '../../components/PostCard'
 import { Profile } from '../../components/Profile'
 import { gitHubSearchApi } from '../../lib/gitHubSearch'
@@ -12,8 +18,21 @@ interface PostProps {
   updatedAt: string;
 }
 
+const searchFormSchema = z.object({
+  query: z.string(),
+})
+type SearchFormInputs = z.infer<typeof searchFormSchema>
+
 export function Home() {
   const [posts, setPosts] = useState<PostProps[]>([])
+
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<SearchFormInputs>({
+    resolver: zodResolver(searchFormSchema),
+  })
   
   const fetchPosts = useCallback(async (query: string = '') => {
     const response = await gitHubSearchApi.get('/issues', {
@@ -25,10 +44,13 @@ export function Home() {
     if(response.data.total_count > 0){
       const postsResult = response.data.items.map(item => {
         return {
-          id: item.id,
+          id: item.number,
           title: item.title,
           body: item.body,
-          updatedAt: 'Há 2 dia'
+          updatedAt: formatDistanceToNow(new Date(item.updated_at), {
+            addSuffix: true,
+            locale: ptBr,
+          })
         }
       })
 
@@ -36,6 +58,10 @@ export function Home() {
     }
     
   }, [])
+
+  async function handleSearchPosts(data: SearchFormInputs) {
+    await fetchPosts(data.query)
+  }
 
   useEffect(() => {
     fetchPosts()
@@ -50,7 +76,14 @@ export function Home() {
           <h2>Publicações</h2>
           <span>{posts.length} publicações</span>
         </div>
-        <input type="text" placeholder="Buscar conteúdo"/>
+        
+        <form onSubmit={handleSubmit(handleSearchPosts)}>
+          <input 
+            type="text" 
+            placeholder="Buscar conteúdo"
+            {...register('query')}
+          />
+        </form>
 
         <div className="postsList">
           { posts.map(post => (
